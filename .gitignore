@@ -1,0 +1,39 @@
+# Rust
+/target/
+**/*.rs.bk
+*.pdb
+Cargo.lock  # Remove this line if you're building a binary/application
+
+# Debug/Release builds
+debug/
+target/
+**/target/
+
+# Backup files
+*.swp
+*.swo
+*~
+
+# IDE/Editor files
+.vscode/
+.idea/
+*.iml
+.DS_Store
+*.sublime-*
+
+# Data directory
+/data/
+data/
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Test coverage
+*.profraw
+*.profdata
+tarpaulin-report.html
+cobertura.xml
+
+# Documentation build
+/doc/

@@ -1,0 +1,12 @@
+[package]
+name = "pq-peak"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+arrow = { version = "57.0.0", features = ["prettyprint"] }
+clap = { version = "4.5.51", features = ["derive"] }
+color-eyre = "0.6.5"
+crossterm = "0.29.0"
+parquet = "57.0.0"
+ratatui = "0.29.0"
