@@ -20,24 +20,16 @@ pub fn peak(path: &std::path::PathBuf) -> Result<(), Error> {
     }
     let file = fs::File::open(path)?;
     let builder = ParquetRecordBatchReaderBuilder::try_new(file)?;
-    let mut reader = builder.with_batch_size(20).build()?;
+    let mut reader = builder.with_batch_size(150).build()?;
 
     if let Some(Ok(batch)) = reader.next() {
-        if batch.num_columns() > 12 {
-            println!("PQ-PEAK is currently working on better parquet printing");
-            println!("for now very wide parquet files are previewed differently.");
-
-            peak_large(batch, 20);
-        } else {
-            println!("Number of rows: {}", batch.num_rows());
-            println!("{}", pretty_format_batches(&[batch]).unwrap());
-        }
+        peak_table(batch, 150);
     }
 
     Ok(())
 }
 
-fn peak_large(batch: RecordBatch, batch_length: usize) {
+fn peak_table(batch: RecordBatch, batch_length: usize) {
     let mut field_names = Vec::new();
     batch.schema().fields().iter().for_each(|f| {
         field_names.push(f.name().to_owned());
@@ -52,6 +44,5 @@ fn peak_large(batch: RecordBatch, batch_length: usize) {
             .collect();
         rows.push(row_strings);
     }
-    println!("MAKING TABLE!");
     build_table(field_names, rows).unwrap();
 }
