@@ -43,6 +43,8 @@ The interface shows which batch you're viewing and how many total rows exist in 
 
 The edit command opens a split view with a SQL editor on top and a table preview below. You can write SQL queries to filter, aggregate, or transform the data and see results immediately.
 
+![SQL Demo](sql_demo.gif)
+
 ```bash
 pq-peak edit data.parquet
 pq-peak edit data.parquet --batch-size 150
