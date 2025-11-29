@@ -4,10 +4,15 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-arrow = { version = "57.0.0", features = ["prettyprint"] }
 clap = { version = "4.5.51", features = ["derive"] }
 color-eyre = "0.6.5"
 crossterm = "0.29.0"
-parquet = "57.0.0"
+datafusion = "46.0.0"
 ratatui = "0.29.0"
+tokio = { version = "1", features = ["rt-multi-thread", "macros"] }
 tui-textarea = "0.7.0"
+
+# DataFusion 46.x uses Arrow 54.x which has the chrono conflict fix
+# Let DataFusion control the arrow/parquet versions
+arrow = { version = "54", features = ["prettyprint"] }
+parquet = { version = "54" }
