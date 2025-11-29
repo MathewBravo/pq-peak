@@ -11,7 +11,6 @@ pub fn peak(path: &std::path::PathBuf, batch_size: usize) -> Result<(), Box<dyn 
         exit(0)
     }
     
-    // Just pass the path to the table builder - it will open the file as needed
     build_table(path.clone(), batch_size)?;
 
     Ok(())

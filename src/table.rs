@@ -26,15 +26,13 @@ struct App {
 
 impl App {
     fn new(file_path: PathBuf, batch_size: usize) -> Result<Self, Box<dyn std::error::Error>> {
-        // Open file just to get metadata
         let file = File::open(&file_path)?;
         let builder = ParquetRecordBatchReaderBuilder::try_new(file)?.with_batch_size(batch_size);
 
         let metadata = builder.metadata();
         let total_rows = metadata.file_metadata().num_rows() as usize;
-        let total_batches = (total_rows + batch_size - 1) / batch_size; // ceiling division
+        let total_batches = (total_rows + batch_size - 1) / batch_size;
 
-        // Get schema/header from metadata
         let arrow_schema = builder.schema();
         let header: Vec<String> = arrow_schema
             .fields()
@@ -42,7 +40,6 @@ impl App {
             .map(|f| f.name().to_owned())
             .collect();
 
-        // Load first batch
         let mut reader = builder.build()?;
         let first_batch = reader.next().ok_or("No data in file")??;
         let current_rows = batch_to_rows(&first_batch);
@@ -66,11 +63,8 @@ impl App {
             ParquetRecordBatchReaderBuilder::try_new(file)?.with_batch_size(self.batch_size);
 
         let reader = builder.build()?;
-
-        // Use skip() to efficiently jump to the desired batch
         let mut skipped_reader = reader.skip(batch_idx);
 
-        // Read the target batch
         if let Some(batch_result) = skipped_reader.next() {
             let batch = batch_result?;
             self.current_rows = batch_to_rows(&batch);
@@ -165,7 +159,6 @@ impl App {
             Row::new(slice.iter().map(String::as_str).collect::<Vec<_>>())
         });
 
-        // Fixed width columns so the table doesn't squish everything
         let widths = std::iter::repeat_n(12u16, end - start);
 
         let batch_start_row = self.current_batch_idx * self.batch_size;

@@ -218,7 +218,6 @@ impl<'a> App<'a> {
         self.is_filtered = false;
         self.execution_state = ExecutionState::Idle;
 
-        // Reset SQL text area to default query
         self.sql_textarea = TextArea::default();
         self.sql_textarea
             .set_block(Block::default().borders(Borders::ALL).title("SQL Editor"));
@@ -285,7 +284,6 @@ impl<'a> App<'a> {
             return Err("No SQL results to save. Execute a query first.".into());
         }
 
-        // Reconstruct RecordBatch from current rows
         let schema = Schema::new(
             self.header
                 .iter()
@@ -309,7 +307,6 @@ impl<'a> App<'a> {
 
         let batch = RecordBatch::try_new(Arc::new(schema), columns)?;
 
-        // Write to parquet file
         let file = File::create(output_path)?;
         let props = WriterProperties::builder().build();
         let mut writer = ArrowWriter::try_new(file, batch.schema(), Some(props))?;
@@ -360,7 +357,6 @@ impl<'a> App<'a> {
             return None;
         }
 
-        // Save results with Ctrl+S
         if key.code == KeyCode::Char('s') && key.modifiers.contains(event::KeyModifiers::CONTROL) {
             if self.is_filtered {
                 self.show_save_dialog = true;
@@ -468,7 +464,6 @@ impl<'a> App<'a> {
         self.draw_status(f, chunks[1]);
         self.draw_table(f, chunks[2]);
 
-        // Render save dialog as popup if active
         if self.show_save_dialog {
             self.draw_save_dialog(f, area);
         }
@@ -478,7 +473,6 @@ impl<'a> App<'a> {
         use ratatui::layout::Rect;
         use ratatui::widgets::Clear;
 
-        // Create centered popup
         let popup_area = Rect {
             x: area.width / 4,
             y: area.height / 2 - 2,
@@ -486,10 +480,7 @@ impl<'a> App<'a> {
             height: 5,
         };
 
-        // Clear the area behind the popup
         f.render_widget(Clear, popup_area);
-
-        // Render the save dialog
         f.render_widget(&self.save_dialog, popup_area);
     }
 
